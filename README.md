@@ -1,19 +1,27 @@
 # E-Gnite Growth
 
-E-Gnite Growth is a simple outcome layer built on top of agent systems.
+E-Gnite Growth is a lightweight outcome layer that transforms raw lead data into actionable business outputs using AI.
 
-It demonstrates how agents can move from:
-data → decision → action
+## What This Demo Shows
 
-## What this demo does
+- Lead qualification
+- Intelligent scoring
+- AI-powered outreach generation
+- End-to-end flow: data → decision → action
 
-- Load leads
-- Filter qualified leads
-- Score them
-- Select best lead
-- Generate outreach message
+## Stack
+
+- Python
+- OpenAI API
+- Rule-based scoring
 
 ## Run
 
-pip install -r requirements.txt
+pip install -r requirements.txt  
 python src/main.py
+
+## Output
+
+- Selected high-value lead  
+- Calculated score  
+- AI-generated outreach message

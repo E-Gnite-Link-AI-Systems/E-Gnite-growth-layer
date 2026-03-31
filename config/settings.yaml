@@ -1,0 +1,9 @@
+qualification:
+  min_revenue: 1000
+
+scoring:
+  revenue_weight: 10
+  industry_weight: 5
+  high_revenue_bonus: 5
+  high_revenue_threshold: 5000
+  target_industry: marketing

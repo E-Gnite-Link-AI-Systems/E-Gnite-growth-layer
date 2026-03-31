@@ -1,38 +1,43 @@
+import json
+import os
+
 from qualify import qualify_leads
 from score import score_leads
 from outreach import generate_outreach
-from email_sender import send_email
-import time
 
-def run_system():
-    # your existing logic here
-    pass
-
-while True:
-    print("\n🚀 Running Growth Cycle...\n")
-
-    run_system()
-
-    print("\n⏳ Waiting 60 seconds...\n")
-    time.sleep(60)
-    
-leads = [
-    {"name": "John", "company": "ABC", "revenue": 2000},
-    {"name": "Sarah", "company": "XYZ", "revenue": 500}
-]
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-qualified = qualify_leads(leads)
-scored = score_leads(qualified)
+def run_pipeline():
+    leads_path = os.path.join(BASE_DIR, "data", "leads.json")
+    with open(leads_path, "r") as f:
+        leads = json.load(f)
 
-best = max(scored, key=lambda x: x["score"])
+    qualified = qualify_leads(leads)
+    scored = score_leads(qualified)
 
-message = generate_outreach(best)
+    best = max(scored, key=lambda x: x["score"])
+    message = generate_outreach(best)
 
-send_email(best["email"], "Growth Opportunity", message)
+    output = {
+        "total": len(leads),
+        "qualified_count": len(qualified),
+        "best_lead": best["name"],
+        "best_score": best["score"],
+        "outreach_message": message,
+        "results": scored,
+    }
 
-print("Lead:", best["name"])
-print("Score:", best["score"])
-print("Message:", message)
+    out_path = os.path.join(BASE_DIR, "demo", "sample_output.json")
+    with open(out_path, "w") as f:
+        json.dump(output, f, indent=2)
+
+    print("Lead:", best["name"])
+    print("Score:", best["score"])
+    print("Message:", message)
+
+    return output
 
 
+if __name__ == "__main__":
+    run_pipeline()

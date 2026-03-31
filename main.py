@@ -8,6 +8,14 @@ def run_system():
     # your existing logic here
     pass
 
+while True:
+    print("\n🚀 Running Growth Cycle...\n")
+
+    run_system()
+
+    print("\n⏳ Waiting 60 seconds...\n")
+    time.sleep(60)
+    
 leads = [
     {"name": "John", "company": "ABC", "revenue": 2000},
     {"name": "Sarah", "company": "XYZ", "revenue": 500}

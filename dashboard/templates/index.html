@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-Gnite Growth — Dashboard</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --accent: #6c3cff;
+      --accent-light: #ede9ff;
+      --dark: #0f0f1a;
+      --card-bg: #16162a;
+      --border: #2a2a44;
+      --text-muted: #8b8bb3;
+    }
+
+    body {
+      background: var(--dark);
+      color: #e8e8f0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 1.5rem;
+    }
+    .navbar-brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff !important;
+      letter-spacing: -0.3px;
+    }
+    .navbar-brand span {
+      color: var(--accent);
+    }
+    .nav-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-left: 0.6rem;
+    }
+
+    /* ── Stat Cards ── */
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.4rem 1.5rem;
+      height: 100%;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover { border-color: var(--accent); }
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+    .stat-icon {
+      font-size: 1.6rem;
+      color: var(--accent);
+      opacity: 0.8;
+    }
+
+    /* ── Section Card ── */
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .section-header {
+      padding: 1rem 1.4rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .section-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #d0d0e8;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Run Button ── */
+    .btn-run {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.45rem 1.1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-run:hover { background: #5a30d9; color: #fff; transform: translateY(-1px); }
+    .btn-run:active { transform: translateY(0); }
+    .btn-run:disabled { background: #3a3a5c; color: #666; cursor: not-allowed; }
+
+    /* ── Table ── */
+    .table-dark {
+      --bs-table-bg: transparent;
+      --bs-table-hover-bg: rgba(255,255,255,0.03);
+      --bs-table-border-color: var(--border);
+      color: #d8d8ec;
+      font-size: 0.875rem;
+      margin: 0;
+    }
+    .table-dark thead th {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      font-weight: 500;
+    }
+    .table-dark td {
+      padding: 0.75rem 1rem;
+      vertical-align: middle;
+      border-bottom: 1px solid rgba(42,42,68,0.6);
+    }
+
+    /* ── Badges ── */
+    .badge-qualified {
+      background: rgba(52, 211, 153, 0.12);
+      color: #34d399;
+      font-size: 0.7rem;
+      padding: 0.3em 0.65em;
+      border-radius: 6px;
+      font-weight: 600;
+      border: 1px solid rgba(52,211,153,0.25);
+    }
+    .badge-cold {
+      background: rgba(139,139,179,0.1);
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      padding: 0.3em 0.65em;
+      border-radius: 6px;
+      font-weight: 600;
+      border: 1px solid rgba(139,139,179,0.2);
+    }
+
+    /* ── Score bar ── */
+    .score-wrap { min-width: 110px; }
+    .score-bar-track {
+      background: rgba(108,60,255,0.12);
+      border-radius: 4px;
+      height: 5px;
+      margin-top: 4px;
+    }
+    .score-bar-fill {
+      background: var(--accent);
+      height: 5px;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    .score-num {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #c4b5fd;
+    }
+
+    /* ── Outreach button ── */
+    .btn-outreach {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 7px;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.75rem;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .btn-outreach:hover { background: var(--accent); color: #fff; }
+    .btn-outreach:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      padding: 3.5rem 1rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    .empty-state i { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.4; }
+    .empty-state p { font-size: 0.88rem; margin: 0; }
+
+    /* ── Spinner ── */
+    .spinner-border-sm { width: 0.9rem; height: 0.9rem; }
+
+    /* ── Modal ── */
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: #e0e0f0;
+    }
+    .modal-header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.1rem 1.4rem;
+    }
+    .modal-title { font-size: 0.95rem; font-weight: 700; }
+    .modal-body { padding: 1.4rem; }
+    .modal-footer { border-top: 1px solid var(--border); }
+    .btn-close { filter: invert(1) brightness(0.7); }
+    .outreach-box {
+      background: rgba(108,60,255,0.07);
+      border: 1px solid rgba(108,60,255,0.2);
+      border-radius: 10px;
+      padding: 1.1rem 1.2rem;
+      font-size: 0.875rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      color: #d0d0e8;
+    }
+    .meta-pill {
+      display: inline-block;
+      background: rgba(108,60,255,0.12);
+      color: #a78bfa;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      padding: 0.2em 0.6em;
+      margin-right: 0.4rem;
+      margin-bottom: 0.6rem;
+      font-weight: 600;
+      border: 1px solid rgba(108,60,255,0.2);
+    }
+
+    /* ── Copy button ── */
+    .btn-copy {
+      background: rgba(108,60,255,0.15);
+      color: #a78bfa;
+      border: 1px solid rgba(108,60,255,0.25);
+      border-radius: 7px;
+      font-size: 0.8rem;
+      padding: 0.35rem 0.9rem;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .btn-copy:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* ── Toast ── */
+    .toast-container { z-index: 1100; }
+
+    /* ── Revenue tag ── */
+    .rev-tag { color: #fff; font-weight: 600; }
+    .rev-tag small { color: var(--text-muted); font-weight: 400; font-size: 0.75em; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ NAVBAR ════════════════════════════════ -->
+<nav class="navbar">
+  <div class="d-flex align-items-center">
+    <span class="navbar-brand"><span>E-Gnite</span> Growth</span>
+    <span class="nav-sub">Outcome Layer</span>
+  </div>
+  <div class="d-flex align-items-center gap-2">
+    <span class="badge" style="background:rgba(108,60,255,0.15);color:#a78bfa;font-size:0.7rem;border:1px solid rgba(108,60,255,0.2);">
+      <i class="bi bi-circle-fill me-1" style="font-size:0.5rem;color:#34d399;vertical-align:middle;"></i>
+      Live
+    </span>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════ MAIN ══════════════════════════════════ -->
+<div class="container-fluid px-4 py-4" style="max-width:1200px;margin:auto;">
+
+  <!-- ── Stats row ── -->
+  <div class="row g-3 mb-4" id="stats-row">
+    <div class="col-6 col-lg-3">
+      <div class="stat-card d-flex justify-content-between align-items-start">
+        <div>
+          <div class="stat-label">Total Leads</div>
+          <div class="stat-value" id="stat-total">—</div>
+        </div>
+        <i class="bi bi-people stat-icon"></i>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="stat-card d-flex justify-content-between align-items-start">
+        <div>
+          <div class="stat-label">Qualified</div>
+          <div class="stat-value" id="stat-qualified">—</div>
+        </div>
+        <i class="bi bi-check-circle stat-icon"></i>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="stat-card d-flex justify-content-between align-items-start">
+        <div>
+          <div class="stat-label">Top Score</div>
+          <div class="stat-value" id="stat-top-score">—</div>
+        </div>
+        <i class="bi bi-graph-up-arrow stat-icon"></i>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="stat-card d-flex justify-content-between align-items-start">
+        <div>
+          <div class="stat-label">Best Lead</div>
+          <div class="stat-value" id="stat-best-lead" style="font-size:1.2rem;padding-top:0.3rem;">—</div>
+        </div>
+        <i class="bi bi-star stat-icon"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Pipeline card ── -->
+  <div class="section-card">
+    <div class="section-header">
+      <h2 class="section-title"><i class="bi bi-lightning-charge me-2" style="color:var(--accent);"></i>Lead Pipeline</h2>
+      <button class="btn-run" id="run-btn" onclick="runPipeline()">
+        <span id="run-label"><i class="bi bi-play-fill me-1"></i>Run Pipeline</span>
+        <span id="run-spinner" class="d-none">
+          <span class="spinner-border spinner-border-sm me-1" role="status"></span>Running…
+        </span>
+      </button>
+    </div>
+
+    <div id="table-wrap">
+      <!-- empty state -->
+      <div class="empty-state" id="empty-state">
+        <i class="bi bi-funnel d-block"></i>
+        <p>Click <strong>Run Pipeline</strong> to qualify and score your leads.</p>
+      </div>
+
+      <!-- results table (hidden until pipeline runs) -->
+      <div class="table-responsive d-none" id="results-table-wrap">
+        <table class="table table-dark table-hover" id="results-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Company</th>
+              <th>Industry</th>
+              <th>Revenue</th>
+              <th>Score</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="results-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ══════════════════════ OUTREACH MODAL ════════════════════════════════ -->
+<div class="modal fade" id="outreachModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-envelope me-2" style="color:var(--accent);"></i>AI Outreach Message</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <!-- lead meta pills -->
+        <div id="modal-meta" class="mb-3"></div>
+        <!-- message box -->
+        <div id="modal-loading" class="text-center py-4 d-none">
+          <div class="spinner-border" style="color:var(--accent);" role="status"></div>
+          <p class="mt-2" style="color:var(--text-muted);font-size:0.85rem;">Generating outreach via AI…</p>
+        </div>
+        <div id="modal-message" class="outreach-box d-none"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-copy d-none" id="copy-btn" onclick="copyMessage()">
+          <i class="bi bi-clipboard me-1"></i>Copy
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="copy-toast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" data-bs-delay="2000">
+    <div class="d-flex">
+      <div class="toast-body"><i class="bi bi-check-lg me-1"></i>Copied to clipboard!</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const MAX_SCORE = 20; // theoretical max from scoring engine
+  let currentMessage = "";
+
+  // ── Run pipeline ──────────────────────────────────────────────────────────
+  async function runPipeline() {
+    const btn = document.getElementById("run-btn");
+    const label = document.getElementById("run-label");
+    const spinner = document.getElementById("run-spinner");
+
+    btn.disabled = true;
+    label.classList.add("d-none");
+    spinner.classList.remove("d-none");
+
+    try {
+      const res = await fetch("/api/run", { method: "POST" });
+      const data = await res.json();
+      renderStats(data);
+      renderTable(data.results);
+    } catch (e) {
+      alert("Pipeline error: " + e.message);
+    } finally {
+      btn.disabled = false;
+      label.classList.remove("d-none");
+      spinner.classList.add("d-none");
+    }
+  }
+
+  // ── Render stat cards ─────────────────────────────────────────────────────
+  function renderStats(data) {
+    document.getElementById("stat-total").textContent = data.total;
+    document.getElementById("stat-qualified").textContent = data.qualified_count;
+    document.getElementById("stat-top-score").textContent = data.best_score;
+    document.getElementById("stat-best-lead").textContent = data.best_lead;
+  }
+
+  // ── Render table rows ─────────────────────────────────────────────────────
+  function renderTable(results) {
+    const body = document.getElementById("results-body");
+    body.innerHTML = "";
+
+    results.forEach((lead) => {
+      const pct = Math.min((lead.score / MAX_SCORE) * 100, 100).toFixed(0);
+      const badge = lead.qualified
+        ? `<span class="badge-qualified">Qualified</span>`
+        : `<span class="badge-cold">Cold</span>`;
+
+      const outreachBtn = lead.qualified
+        ? `<button class="btn-outreach" onclick='openOutreach(${JSON.stringify(JSON.stringify(lead))})'>
+            <i class="bi bi-send me-1"></i>Outreach
+           </button>`
+        : `<button class="btn-outreach" disabled><i class="bi bi-send me-1"></i>Outreach</button>`;
+
+      body.insertAdjacentHTML("beforeend", `
+        <tr>
+          <td><strong style="color:#fff;">${lead.name}</strong></td>
+          <td style="color:#b0b0d0;">${lead.company}</td>
+          <td><span style="text-transform:capitalize;color:#9090c0;">${lead.industry || '—'}</span></td>
+          <td class="rev-tag">$${lead.revenue.toLocaleString()} <small>/ mo</small></td>
+          <td>
+            <div class="score-wrap">
+              <span class="score-num">${lead.score}</span>
+              <div class="score-bar-track">
+                <div class="score-bar-fill" style="width:${pct}%"></div>
+              </div>
+            </div>
+          </td>
+          <td>${badge}</td>
+          <td>${outreachBtn}</td>
+        </tr>
+      `);
+    });
+
+    document.getElementById("empty-state").classList.add("d-none");
+    document.getElementById("results-table-wrap").classList.remove("d-none");
+  }
+
+  // ── Open outreach modal ───────────────────────────────────────────────────
+  async function openOutreach(leadJson) {
+    const lead = JSON.parse(leadJson);
+    currentMessage = "";
+
+    // reset modal
+    const msgEl = document.getElementById("modal-message");
+    const loadEl = document.getElementById("modal-loading");
+    const copyBtn = document.getElementById("copy-btn");
+    const metaEl = document.getElementById("modal-meta");
+
+    msgEl.classList.add("d-none");
+    msgEl.textContent = "";
+    copyBtn.classList.add("d-none");
+    loadEl.classList.remove("d-none");
+
+    metaEl.innerHTML = `
+      <span class="meta-pill"><i class="bi bi-person me-1"></i>${lead.name}</span>
+      <span class="meta-pill"><i class="bi bi-building me-1"></i>${lead.company}</span>
+      <span class="meta-pill"><i class="bi bi-tag me-1"></i>${lead.industry || 'business'}</span>
+      <span class="meta-pill"><i class="bi bi-graph-up me-1"></i>Score: ${lead.score}</span>
+    `;
+
+    const modal = new bootstrap.Modal(document.getElementById("outreachModal"));
+    modal.show();
+
+    try {
+      const res = await fetch("/api/outreach", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lead }),
+      });
+      const data = await res.json();
+      currentMessage = data.message || data.error || "No message returned.";
+    } catch (e) {
+      currentMessage = "Error generating message: " + e.message;
+    } finally {
+      loadEl.classList.add("d-none");
+      msgEl.textContent = currentMessage;
+      msgEl.classList.remove("d-none");
+      copyBtn.classList.remove("d-none");
+    }
+  }
+
+  // ── Copy to clipboard ─────────────────────────────────────────────────────
+  function copyMessage() {
+    if (!currentMessage) return;
+    navigator.clipboard.writeText(currentMessage).then(() => {
+      const toast = new bootstrap.Toast(document.getElementById("copy-toast"));
+      toast.show();
+    });
+  }
+</script>
+</body>
+</html>

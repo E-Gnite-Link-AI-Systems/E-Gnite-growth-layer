@@ -1,6 +1,7 @@
 from qualify import qualify_leads
 from score import score_leads
 from outreach import generate_outreach
+from email_sender import send_email
 
 leads = [
     {"name": "John", "company": "ABC", "revenue": 2000},
@@ -13,6 +14,8 @@ scored = score_leads(qualified)
 best = max(scored, key=lambda x: x["score"])
 
 message = generate_outreach(best)
+
+send_email(best["email"], "Growth Opportunity", message)
 
 print("Lead:", best["name"])
 print("Score:", best["score"])
